@@ -33,8 +33,7 @@ namespace iroha {
       using HashType =
           decltype(std::declval<KeyHash>()(std::declval<KeyType>()));
 
-      using InternalStorage =
-          ametsuchi::InMemoryFrame<HashType, ValueType, Count>;
+      using InternalStorage = ametsuchi::InMemoryFrame<HashType, ValueType, Count>;
       InternalStorage internal_storage_;
 
       inline HashType toHash(KeyType const &key) const {

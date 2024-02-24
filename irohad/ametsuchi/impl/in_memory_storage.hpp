@@ -10,6 +10,9 @@
 #include <optional>
 #include <unordered_map>
 #include <utility>
+#include <iostream>
+#include <chrono>
+#include <iomanip>
 
 #include "common/common.hpp"
 #include "common/ring_buffer.hpp"
@@ -42,8 +45,15 @@ namespace iroha::ametsuchi {
 
     template <typename K, typename V>
     void insert(K &&key, V &&value) {
-      if (auto it = index_.find(std::forward<K>(key)); index_.end() == it)
-        data_.push(
+      auto now = std::chrono::system_clock::now();
+      auto in_time_t = std::chrono::system_clock::to_time_t(now);
+      std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": Inserting key-value pair into InMemoryFrame\n";
+      std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": Start: [auto it = index_.find(std::forward<K>(key))]\n";
+      auto it = index_.find(std::forward<K>(key))
+      std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": End: [auto it = index_.find(std::forward<K>(key))]\n";
+      if (index_.end() == it) {
+          std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": Start: data_.push()\n";
+          data_.push(
             [&](ValueHandle h, Entry const & /*value*/) {
               index_[std::forward<K>(key)] = h;
               ++all_time_values_;
@@ -53,9 +63,14 @@ namespace iroha::ametsuchi {
               index_.erase(stored_value.first);
             },
             std::forward<K>(key),
-            std::forward<V>(value));
+            std::forward<V>(value)
+          );
+          std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": End: data_.push()\n";
+      }
       else
         data_.getItem(it->second).second = std::forward<V>(value);
+
+      std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": Insertion successful\n";
     }
 
     std::optional<std::reference_wrapper<ValueType const>> find(

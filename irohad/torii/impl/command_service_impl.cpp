@@ -78,6 +78,7 @@ void CommandServiceImpl::processTransactionResponse(
     std::shared_ptr<shared_model::interface::TransactionResponse> response) {
   // find response for this tx in cache; if status of received
   // response isn't "greater" than cached one, dismiss received one
+  log_->debug("{}: start: line #81: {}", "SORAKH", *response);
   auto tx_hash = response->transactionHash();
   auto cached_tx_state = cache_->findItem(tx_hash);
   if (cached_tx_state
@@ -86,7 +87,10 @@ void CommandServiceImpl::processTransactionResponse(
                  PrioritiesComparisonResult::kGreater) {
     return;
   }
+  log_->debug("{}: end: line #90: {}", "SORAKH", *response);
+  log_->debug("{}: start: cache_->addItem(tx_hash, response): {}", "SORAKH", *response);
   cache_->addItem(tx_hash, response);
+  log_->debug("{}: end: cache_->addItem(tx_hash, response): {}", "SORAKH", *response);
 }
 
 void CommandServiceImpl::pushStatus(
