@@ -49,7 +49,7 @@ namespace iroha::ametsuchi {
       auto in_time_t = std::chrono::system_clock::to_time_t(now);
       std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": Inserting key-value pair into InMemoryFrame\n";
       std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": Start: [auto it = index_.find(std::forward<K>(key))]\n";
-      auto it = index_.find(std::forward<K>(key))
+      auto it = index_.find(std::forward<K>(key));
       std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": End: [auto it = index_.find(std::forward<K>(key))]\n";
       if (index_.end() == it) {
           std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << ": Start: data_.push()\n";
